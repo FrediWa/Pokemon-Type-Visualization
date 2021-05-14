@@ -1,6 +1,5 @@
 # Edge bundling visualization of Pokemon types
 by Fredi and Tobias
----
 ## Datan
 Vi fick datan från Kaggle. Ursprungligen hade jag tänkt göra en Sunburst visualisering men hade svårigheter att hitta ett hierarkiskt dataset.  Sedan hittade jag ett Pokedex dataset och tänkte att det här kan man säkert göra något roligt av. 
 
