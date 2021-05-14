@@ -1,0 +1,11 @@
+html{
+    font-family: sans-serif;
+}
+
+.arc text{
+    fill: black;
+}
+
+#output g{
+    transform:rotate(80deg);
+}
