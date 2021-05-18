@@ -66,7 +66,6 @@ function createGraph(data){
          .style('stroke', function(d, i){return colors[d.type_1]})
          .style('stroke-width', 2)
          .style('stroke-opacity', 0.2)
-         .style("mix-blend-mode", "darken")
          .style('fill', "none")
 
 
