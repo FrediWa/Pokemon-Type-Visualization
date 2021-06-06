@@ -9,12 +9,3 @@ html{
 #output g{
     transform:rotate(80deg);
 }
-#label-node:hover {
-    visibility: hidden;
-    width: 120px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    padding: 5px 0;
-    border-radius: 6px;
-}

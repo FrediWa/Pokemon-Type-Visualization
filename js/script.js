@@ -1,4 +1,4 @@
-const types = ["Unknown", "Normal", "Fire", "Fighting", "Water", "Flying", "Grass", "Poison", "Electric", "Ground", "Psychic", "Rock", "Ice", "Bug", "Dragon", "Ghost", "Dark", "Steel", "Fairy"];
+const types = ["NA", "Normal", "Fire", "Fighting", "Water", "Flying", "Grass", "Poison", "Electric", "Ground", "Psychic", "Rock", "Ice", "Bug", "Dragon", "Ghost", "Dark", "Steel", "Fairy"];
 const colors = ["#282828", "#A8A878", "#F08030", "#C03028", "#12c0ff", "#A890F0", "#78C850", "#A040A0", "#F8D030", "#E0C068", "#F85888", "#B8A038", "#98D8D8", "#A8B820", "#7038F8", "#705898", "#705848", "#B8B8D0", "#EE99AC"] //colors for each type's label
 
 //precalculated positions for nodes
@@ -60,9 +60,14 @@ function createGraph(data){
         .attr('d', function(d, i){
             let x = cartesianNodeLocations[d.type_1]
             let y = cartesianNodeLocations[d.type_2]
+
+            x = x.map(x => x*0.85);
+            y = y.map(y => y*0.85);
+
             return lineGenerator([x,[0,0] ,y])
 
          })
+         .attr("class", function(d, i){return "path-type-" + d.type_1})
          .style('stroke', function(d, i){return colors[d.type_1]})
          .style('stroke-width', 2)
          .style('stroke-opacity', 0.2)
@@ -91,14 +96,13 @@ function createGraph(data){
 
       d3.selectAll('.label-node')
       .append("text")
-      .attr("id","tooltip")
       .text(function(d, i){ return types[i]})
       .attr('x', function(d, i){ return cartesianNodeLocations[i][0]  })
       .attr('y', function(d, i){ return cartesianNodeLocations[i][1] })
       .attr('class', "node-labels")
       .attr('style', "transform: rotate(-80deg) translateX(-18px)")
       .style('fill', "#fff")
-      
+
 
 
       d3.select(".pie")
@@ -111,20 +115,10 @@ function createGraph(data){
     d3.select('.curves')
         .raise();
 
-    const tooltip = d3.select("output")
-    .append("svg")
-    .style("position", "absolute")
-    .style("visibility", "hidden")
-    .text("https://pokedex.org/");
 
-    d3.select("#tooltip")
-    .on("mouseover", function(){return tooltip.style("visibility", "visible");})
-    .on("mousemove", function(){return tooltip.style("top", d3.select(this).attr("cy") + "px");})
-    .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 
 }
-//var button = document.getElementById('getData');
-//button.addEventListener('click', reqListener);
+
 
 function reqListener () {
     console.log("hello");
