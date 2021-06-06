@@ -67,7 +67,7 @@ function createGraph(data){
             return lineGenerator([x,[0,0] ,y])
 
          })
-         .attr("class", function(d, i){return "path-type-" + d.type_1})
+         .attr('class', function(d, i){return "curve-type-" + d.type_1 + " curve"})
          .style('stroke', function(d, i){return colors[d.type_1]})
          .style('stroke-width', 2)
          .style('stroke-opacity', 0.2)
@@ -92,7 +92,20 @@ function createGraph(data){
       .append('path')
       .attr('d', arcGenerator)
       .attr('class', "arc")
-      .style('fill', function(d, i){ return colors[i]});
+      .attr('class', function(d, i){ return "arc-type-" + i})
+      .style('fill', function(d, i){ return colors[i]})
+
+      .on('mouseover', function(d, i){
+          d3.selectAll(".curve")
+          .style('opacity', 0);
+
+          d3.selectAll(".curve-type-"+this.__data__.index)
+          .style('opacity', 1);
+      })
+      .on('mouseout', function(d, i){
+          d3.selectAll(".curve")
+          .style('opacity', 1)
+      });
 
       d3.selectAll('.label-node')
       .append("text")
@@ -109,15 +122,8 @@ function createGraph(data){
           .style("fill", "#ff0000")
           .attr("style", "transform: translate(500px, 500px)")
 
-    console.log(data);
-
-
-    d3.select('.curves')
-        .raise();
-
-
-
 }
+
 
 
 function reqListener () {

@@ -9,3 +9,6 @@ html{
 #output g{
     transform:rotate(80deg);
 }
+.node-labels{
+    pointer-events: none;
+}
