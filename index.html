@@ -16,6 +16,12 @@
     <title>Projekt 2</title>
 </head>
 <body>
+    <div>
+        <p></p>
+  <input type="range" id="volume" name="volume" value="6"
+         min="1" max="6" onchange="changeGenerationRange(this.value)">
+  <label for="volume">Generation <span id="gen-label">VI</span></label>
+</div>
     <svg id="output">
     </svg>
 </body>

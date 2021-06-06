@@ -1,7 +1,15 @@
 const types = ["NA", "Normal", "Fire", "Fighting", "Water", "Flying", "Grass", "Poison", "Electric", "Ground", "Psychic", "Rock", "Ice", "Bug", "Dragon", "Ghost", "Dark", "Steel", "Fairy"];
 const colors = ["#282828", "#A8A878", "#F08030", "#C03028", "#12c0ff", "#A890F0", "#78C850", "#A040A0", "#F8D030", "#E0C068", "#F85888", "#B8A038", "#98D8D8", "#A8B820", "#7038F8", "#705898", "#705848", "#B8B8D0", "#EE99AC"] //colors for each type's label
+const generationThresholds = [151, 251, 386, 493, 649, 721];
+const romanNumerals = ["nulla", "I", "II", "III", "IV", "V", "VI"];
 
+var data;
 //precalculated positions for nodes
+function changeGenerationRange(gen){
+    document.getElementById('gen-label').innerHTML = romanNumerals[gen];
+    let genSpecificData = data.slice(0, generationThresholds[gen]);
+    drawGraph(genSpecificData);
+}
 const cartesianNodeLocations=[
     [450, 0],
     [425.6177587652856, 146.11476114210757],
@@ -24,6 +32,38 @@ const cartesianNodeLocations=[
     [425.6177587652856, -146.11476114210768]
 ];
 
+function drawGraph(data){
+    const lineGenerator = d3.line().curve(d3.curveBundle);
+
+    d3.selectAll(".curve").remove()
+
+    d3.select("svg")
+    .append("g")
+    .attr("style", "transform: translate(500px, 500px)")
+    .attr('class', "curves")
+    .selectAll('path')
+    .data(data)
+    .enter()
+        .append('path')
+        .attr('d', function(d, i){
+            //get start and endpoint of the curves
+            let start = cartesianNodeLocations[d.type_1]
+            let end = cartesianNodeLocations[d.type_2]
+
+            //scale down graph of the curves
+            start = start.map(x => x*0.85);
+            end = end.map(x => x*0.85);
+
+            //draw a path from the startpoint via the midpoint to the endpoint
+            return lineGenerator([start,[0,0], end])
+
+         })
+         .attr('class', function(d, i){return "curve-type-" + d.type_1 + " curve"})
+         .style('stroke', function(d, i){return colors[d.type_1]})
+         .style('stroke-width', 2)
+         .style('stroke-opacity', 0.2)
+         .style('fill', "none")
+}
 function calculateNodeLocation(i){
     let x = Math.cos((Math.PI * 2/19 * i))*450
     let y = Math.sin((Math.PI * 2/19 * i))*450
@@ -44,38 +84,11 @@ function createGraph(data){
         .attr("viewBox", [0, 0, width, height])
         .attr("class", "noice")
 
-    const lineGenerator = d3.line()
-        .curve(d3.curveBundle);
+
     const pieGenerator = d3.pie();
     const arcData = pieGenerator(nineteen);
 
-    d3.select("svg")
-    .append("g")
-    .attr("style", "transform: translate(500px, 500px)")
-    .attr('class', "curves")
-    .selectAll('path')
-    .data(data)
-    .enter()
-        .append('path')
-        .attr('d', function(d, i){
-            let x = cartesianNodeLocations[d.type_1]
-            let y = cartesianNodeLocations[d.type_2]
-
-            x = x.map(x => x*0.85);
-            y = y.map(y => y*0.85);
-
-            return lineGenerator([x,[0,0] ,y])
-
-         })
-         .attr('class', function(d, i){return "curve-type-" + d.type_1 + " curve"})
-         .style('stroke', function(d, i){return colors[d.type_1]})
-         .style('stroke-width', 2)
-         .style('stroke-opacity', 0.2)
-         .style('fill', "none")
-
-
-
-
+    drawGraph(data)
 
     const arcGenerator = d3.arc()
       .innerRadius(400)
@@ -113,7 +126,7 @@ function createGraph(data){
       .attr('x', function(d, i){ return cartesianNodeLocations[i][0]  })
       .attr('y', function(d, i){ return cartesianNodeLocations[i][1] })
       .attr('class', "node-labels")
-      .attr('style', "transform: rotate(-80deg) translateX(-18px)")
+      .attr('style', "transform: rotate(-81deg) translateX(-18px)")
       .style('fill', "#fff")
 
 
@@ -131,7 +144,9 @@ function reqListener () {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            createGraph(JSON.parse(this.response));
+            data = JSON.parse(this.response);
+            createGraph(data);
+
         }
     };
     xhttp.open("GET", "./js/pokedex.json", true);
