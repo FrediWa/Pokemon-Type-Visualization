@@ -4,12 +4,14 @@ const generationThresholds = [151, 251, 386, 493, 649, 721];
 const romanNumerals = ["nulla", "I", "II", "III", "IV", "V", "VI"];
 
 var data;
-//precalculated positions for nodes
+
 function changeGenerationRange(gen){
     document.getElementById('gen-label').innerHTML = romanNumerals[gen];
     let genSpecificData = data.slice(0, generationThresholds[gen]);
-    drawGraph(genSpecificData);
+    drawArcs(genSpecificData);
 }
+
+//precalculated positions for nodes
 const cartesianNodeLocations=[
     [450, 0],
     [425.6177587652856, 146.11476114210757],
@@ -32,7 +34,7 @@ const cartesianNodeLocations=[
     [425.6177587652856, -146.11476114210768]
 ];
 
-function drawGraph(data){
+function drawArcs(data){
     const lineGenerator = d3.line().curve(d3.curveBundle);
 
     d3.selectAll(".curve").remove()
@@ -64,18 +66,19 @@ function drawGraph(data){
          .style('stroke-opacity', 0.2)
          .style('fill', "none")
 }
+
 function calculateNodeLocation(i){
     let x = Math.cos((Math.PI * 2/19 * i))*450
     let y = Math.sin((Math.PI * 2/19 * i))*450
 
     return [x, y];
 }
+
 function createGraph(data){
     const element = document.getElementById("output");
     const height = 1000;
     const width = 1000;
     const nineteen = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
-
 
     element.setAttribute("width", width);
     element.setAttribute("height", height);
@@ -84,11 +87,10 @@ function createGraph(data){
         .attr("viewBox", [0, 0, width, height])
         .attr("class", "noice")
 
-
     const pieGenerator = d3.pie();
     const arcData = pieGenerator(nineteen);
 
-    drawGraph(data)
+    drawArcs(data)
 
     const arcGenerator = d3.arc()
       .innerRadius(400)
@@ -129,15 +131,10 @@ function createGraph(data){
       .attr('style', "transform: rotate(-81deg) translateX(-18px)")
       .style('fill', "#fff")
 
-
-
       d3.select(".pie")
           .style("fill", "#ff0000")
           .attr("style", "transform: translate(500px, 500px)")
-
 }
-
-
 
 function reqListener () {
     console.log("hello");
@@ -146,7 +143,6 @@ function reqListener () {
         if (this.readyState == 4 && this.status == 200) {
             data = JSON.parse(this.response);
             createGraph(data);
-
         }
     };
     xhttp.open("GET", "./js/pokedex.json", true);
