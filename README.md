@@ -5,6 +5,8 @@ Visualizes the relationship of types of pokemons. An edge between 2 types means 
 ## Live demo
 https://frediwa.github.io/Pokemon-Type-Visualization/
 
+Hover over a type on the donut to filter out irrelevant edges. Use slider to select up to which generation to display.
+
 # Report (English translation)
 
 ## Data
